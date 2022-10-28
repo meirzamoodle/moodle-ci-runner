@@ -690,6 +690,12 @@ then
       SELFIREFOXIMAGE="moodlehq/moodle-standalone-firefox:3.141.59_47.0.1"
   fi
 
+  SE_OPTS=""
+  if [[ "${BROWSER_DEBUG}" == "1" ]]
+  then
+    SE_OPTS='-e SE_OPTS="--log-level FINE"'
+  fi
+
 
   if [ "$BROWSER" == "chrome" ]
   then
@@ -703,7 +709,7 @@ then
       docker run \
         --network "${NETWORK}" \
         --name ${IONICHOSTNAME} \
-        --detach \
+        --detach $SE_OPTS \
         moodlehq/moodleapp:"${MOBILE_VERSION}"
 
       export "IONICURL"="http://${IONICHOSTNAME}:${MOBILE_APP_PORT}"
@@ -718,7 +724,7 @@ then
         --network "${NETWORK}" \
         --name ${SELITERNAME} \
         --detach \
-        $SHMMAP \
+        $SHMMAP $SE_OPTS \
         -v "${CODEDIR}":/var/www/html \
         ${SELCHROMEIMAGE}
 
@@ -738,7 +744,7 @@ then
         --network "${NETWORK}" \
         --name ${SELITERNAME} \
         --detach \
-        $SHMMAP \
+        $SHMMAP $SE_OPTS \
         -v "${CODEDIR}":/var/www/html \
         ${SELFIREFOXIMAGE}
 
