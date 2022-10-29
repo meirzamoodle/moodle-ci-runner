@@ -261,8 +261,20 @@ class moodlehq_ci_runner {
         ];
 
         if (getenv('BROWSER_DEBUG')) {
-            // Chrome has no documented debug logging via capabilities.
-            // These may exist but are undocumented.
+            $profile = array_merge_recursive(
+                $profile,
+                [
+                    'capabilities' => [
+                        'extra_capabilities' => [
+                            'chromeOptions' => [
+                            ],
+                            'goog:loggingPrefs' => [
+                                'driver' => 'ALL',
+                            ],
+                        ],
+                    ],
+                ]
+            );
         }
 
         if (getenv('BROWSER_HEADLESS')) {
